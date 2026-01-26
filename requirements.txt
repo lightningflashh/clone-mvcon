@@ -2,7 +2,7 @@ deepspeed==0.12.3
 faiss_gpu==1.7.2
 jieba==0.42.1
 nltk==3.8.1
-numpy==1.22.2
+numpy==1.22.2a
 pandas==1.5.2
 pytorch_lightning==1.9.5
 regex==2022.10.31

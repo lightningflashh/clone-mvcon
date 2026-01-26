@@ -67,6 +67,7 @@ class ScoreNetworkTestArguments:
         assert self.dataset_type in [
             "AliTianChi",
             "IntelliPro",
+            "HuggingFace",
         ], f"Invalid dataset type: {self.dataset_type}"
         assert (
             self.dataset_type in self.resume_data_path
