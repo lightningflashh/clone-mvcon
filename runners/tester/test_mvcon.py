@@ -50,10 +50,6 @@ def main(
 ):
     set_seed(test_args.seed)
 
-    # Gán đường dẫn ranking thành chuỗi rỗng để skip việc load file json
-    test_args.rank_resume_data_path = ""
-    test_args.rank_job_data_path = ""
-
     if test_args.batch_size > 16:
         print(f"[WARNING] batch_size = {test_args.batch_size} > 16 may require large memory")
 

@@ -81,14 +81,6 @@ class DataArguments:
         default="dataset/AliTianChi/test_classification_data.jsonl",
         metadata={"help": "Path to the classification data for testing."},
     )
-    rank_resume_data_path: str = field(
-        default="dataset/AliTianChi/rank_resume.json",
-        metadata={"help": "Path to the rank resume data for testing."},
-    )
-    rank_job_data_path: str = field(
-        default="dataset/AliTianChi/rank_job.json",
-        metadata={"help": "Path to the rank job data for testing."},
-    )
     dataset_type: str = field(
         default="AliTianChi",
         metadata={"help": "The dataset type."},
@@ -116,12 +108,6 @@ class DataArguments:
         assert (
             self.dataset_type in self.classification_data_path
         ), f"Datset type {self.dataset_type} does not match classification data path {self.classification_data_path}"
-        assert (
-            self.dataset_type in self.rank_resume_data_path
-        ), f"Datset type {self.dataset_type} does not match rank resume data path {self.rank_resume_data_path}"
-        assert (
-            self.dataset_type in self.rank_job_data_path
-        ), f"Datset type {self.dataset_type} does not match rank job data path {self.rank_job_data_path}"
         return
 
 
@@ -232,11 +218,9 @@ def test_mvcon(
         job_data_path=data_args.job_data_path,
         classification_validation_data_path=data_args.valid_label_path,
         classification_data_path=data_args.classification_data_path,
-        rank_resume_data_path=data_args.rank_resume_data_path,
-        rank_job_data_path=data_args.rank_job_data_path,
         dataset_type=data_args.dataset_type,
         query_prefix=data_args.query_prefix,
-        batch_size=6,  # fixed as MVCoN can take large memory
+        batch_size=4,
     )
     all_test_data = load_test_data(test_args)
     (

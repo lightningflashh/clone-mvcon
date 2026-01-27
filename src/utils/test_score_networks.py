@@ -38,14 +38,6 @@ class ScoreNetworkTestArguments:
         default="dataset/AliTianChi/test_classification_data.jsonl",
         metadata={"help": "Path to the classification data."},
     )
-    rank_resume_data_path: str = field(
-        default="dataset/AliTianChi/rank_resume.json",
-        metadata={"help": "Path to the rank resume data."},
-    )
-    rank_job_data_path: str = field(
-        default="dataset/AliTianChi/rank_job.json",
-        metadata={"help": "Path to the rank job data."},
-    )
     dataset_type: str = field(
         default="AliTianChi",
         metadata={"help": "Type of the dataset."},
@@ -78,12 +70,6 @@ class ScoreNetworkTestArguments:
         assert (
             self.dataset_type in self.classification_data_path
         ), f"Datset type {self.dataset_type} does not match classification_data_path {self.classification_data_path}"
-        assert (
-            self.dataset_type in self.rank_resume_data_path
-        ), f"Datset type {self.dataset_type} does not match rank_resume_data_path {self.rank_resume_data_path}"
-        assert (
-            self.dataset_type in self.rank_job_data_path
-        ), f"Datset type {self.dataset_type} does not match rank_job_data_path {self.rank_job_data_path}"
         return
 
 
@@ -102,8 +88,6 @@ def load_test_data(test_args: ScoreNetworkTestArguments):
     valid_classification_labels = pd.read_json(
         test_args.classification_validation_data_path, lines=True
     )
-    test_ranking_resume_labels = json.load(open(test_args.rank_resume_data_path))
-    test_ranking_job_labels = json.load(open(test_args.rank_job_data_path))
 
     for i, row in valid_classification_labels.iterrows():
         user_id = row["user_id"]
@@ -392,18 +376,6 @@ def evaluate(
     ) as fwrite:
         pickle.dump(eval_history, fwrite)
 
-    ## rank job
-    test_ranking_labels = json.load(
-        open(test_args.rank_job_data_path, encoding="utf-8")
-    )
-    evaluator = EvalRanking(
-        metric,
-        test_rid_to_representation=test_rid_to_representation,
-        test_jid_to_representation=test_jid_to_representation,
-        test_ranking_data=test_ranking_labels,
-        offline_mode=True,
-    )
-
     score_report, eval_history = evaluator.evaluate()
     for k, v in score_report.items():
         all_results[f"rank_job_{k}"] = v
@@ -420,18 +392,6 @@ def evaluate(
         os.path.join(test_args.model_path, "rank_job_eval_history.pkl"), "wb"
     ) as fwrite:
         pickle.dump(eval_history, fwrite)
-
-    ## rank resume
-    test_ranking_labels = json.load(
-        open(test_args.rank_resume_data_path, encoding="utf-8")
-    )
-    evaluator = EvalRanking(
-        metric,
-        test_rid_to_representation=test_rid_to_representation,
-        test_jid_to_representation=test_jid_to_representation,
-        test_ranking_data=test_ranking_labels,
-        offline_mode=True,
-    )
 
     score_report, eval_history = evaluator.evaluate()
     for k, v in score_report.items():
