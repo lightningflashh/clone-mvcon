@@ -113,38 +113,6 @@ def load_test_data(test_args: ScoreNetworkTestArguments):
         )
         seen_pairs.add(identifier)
 
-    for jd_no, data in test_ranking_resume_labels.items():
-        user_ids = data["user_ids"]
-        satisfieds = data["satisfied"]
-        for user_id, satisfied in zip(user_ids, satisfieds):
-            identifier = f"{user_id}-{jd_no}"
-            if identifier in seen_pairs:
-                continue
-            all_test_pairs_to_predict.append(
-                {
-                    "user_id": str(user_id),
-                    "jd_no": str(jd_no),
-                    "satisfied": int(satisfied),
-                }
-            )
-            seen_pairs.add(identifier)
-
-    for user_id, data in test_ranking_job_labels.items():
-        jd_nos = data["jd_nos"]
-        satisfieds = data["satisfied"]
-        for jd_no, satisfied in zip(jd_nos, satisfieds):
-            identifier = f"{user_id}-{jd_no}"
-            if identifier in seen_pairs:
-                continue
-            all_test_pairs_to_predict.append(
-                {
-                    "user_id": str(user_id),
-                    "jd_no": str(jd_no),
-                    "satisfied": int(satisfied),
-                }
-            )
-            seen_pairs.add(identifier)
-
     print(f"Total number of test pairs to compute: {len(all_test_pairs_to_predict)}")
     return {
         "all_resume_data_dict": all_resume_data_dict,
